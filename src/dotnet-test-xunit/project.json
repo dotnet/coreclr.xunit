@@ -1,0 +1,43 @@
+﻿{
+  "authors": [ "James Newkirk", "Brad Wilson" ],
+  "title": "xUnit.net [Runner: dotnet]",
+  "description": "Console and Visual Studio runner for xUnit.net.\r\n\r\nSupported platforms:\r\n- dotnet 5.4+",
+  "name": "dotnet-test-xunit",
+  "projectUrl": "https://github.com/xunit/dnx.xunit",
+  "iconUrl": "https://raw.githubusercontent.com/xunit/media/master/logo-512-transparent.png",
+  "licenseUrl": "https://raw.githubusercontent.com/xunit/xunit/master/license.txt",
+  "requireLicenseAcceptance": false,
+  "developmentDependency": true,
+  "version": "99.99.99-dev",
+  "compilationOptions": {
+    "warningsAsErrors": true,
+    "emitEntryPoint": true
+  },
+  "frameworks": {
+    "dnxcore50": {
+      "dependencies": {
+        "System.Linq.Expressions": "4.0.11-rc2-*",
+        "System.Security.Cryptography.Algorithms": "4.0.0-beta-*",
+        "System.Threading.ThreadPool": "4.0.10-beta-*",
+        "System.Xml.XDocument": "4.0.11-beta-*"
+      }
+    }
+  },
+  "dependencies": {
+    "Microsoft.NETCore.Runtime": "1.0.1-beta-*",
+    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-*",
+    "Microsoft.DotNet.ProjectModel": "1.0.0-*",
+    "Microsoft.DotNet.ProjectModel.Loader": "1.0.0-*",
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
+    "Microsoft.Extensions.CommandLineUtils.Sources": "1.0.0-*",
+    "NuGet.Packaging.Core": "3.3.0-rtm-*",
+    "xunit.runner.reporters": "2.1.0-rc1-*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xunit/dnx.xunit"
+  },
+  "packInclude": {
+    "lib/dnxcore50/": [ "bin/Debug/dnxcore50/dotnet-test-xunit.deps", "bin/Debug/dnxcore50/dotnet-test-xunit.exe" ]
+  }
+}
