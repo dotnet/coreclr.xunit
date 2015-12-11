@@ -5,6 +5,7 @@
 	"testRunner":"xunit",
 	"dependencies": {
 		"xunit": "2.1.0",
-		"dotnet-test-xunit": "99.99.99-dev"
+		"dotnet-test-xunit": "99.99.99-dev",
+		"Microsoft.Extensions.Logging.Abstractions":"1.0.0-*"
 	}
 }
