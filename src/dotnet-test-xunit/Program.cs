@@ -369,7 +369,7 @@ namespace Xunit.Runner.DotNet
                             {
                                 foreach (var testcase in vsTestCases.Values)
                                 {
-                                    _testDiscoverySink?.SendTestFound(testcase);
+                                    _testDiscoverySink?.SendTest(testcase);
 
                                     Console.WriteLine(testcase.FullyQualifiedName);
                                 }

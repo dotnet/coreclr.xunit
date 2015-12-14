@@ -27,8 +27,7 @@ namespace Xunit.Runner.DotNet
         {
             var test = _conversions[testStarting.TestCase];
 
-            if (_sink != null)
-                _sink.SendTestStarted(test);
+            _sink?.RecordStart(test);
 
             return true;
         }
@@ -37,8 +36,7 @@ namespace Xunit.Runner.DotNet
         {
             var test = _conversions[testSkipped.TestCase];
 
-            if (_sink != null)
-                _sink.SendTestResult(new TestResult(test) { Outcome = TestOutcome.Skipped });
+            _sink?.RecordResult(new TestResult(test) { Outcome = TestOutcome.Skipped });
 
             return true;
         }
@@ -56,8 +54,7 @@ namespace Xunit.Runner.DotNet
 
             result.Messages.Add(testFailed.Output);
 
-            if (_sink != null)
-                _sink.SendTestResult(result);
+            _sink?.RecordResult(result);
 
             return true;
         }
@@ -66,14 +63,11 @@ namespace Xunit.Runner.DotNet
         {
             var test = _conversions[testPassed.TestCase];
 
-            if (_sink != null)
+            _sink?.RecordResult(new TestResult(test)
             {
-                _sink.SendTestResult(new TestResult(test)
-                {
-                    Outcome = TestOutcome.Passed,
-                    Duration = TimeSpan.FromSeconds((double)testPassed.ExecutionTime),
-                });
-            }
+                Outcome = TestOutcome.Passed,
+                Duration = TimeSpan.FromSeconds((double)testPassed.ExecutionTime),
+            });
 
             return true;
         }
