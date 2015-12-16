@@ -8,7 +8,7 @@
   "licenseUrl": "https://raw.githubusercontent.com/xunit/xunit/master/license.txt",
   "requireLicenseAcceptance": false,
   "developmentDependency": true,
-  "version": "0.0.1-dev-1",
+  "version": "0.0.1-dev-2",
   "compilationOptions": {
     "warningsAsErrors": true,
     "emitEntryPoint": true
