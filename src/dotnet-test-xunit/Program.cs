@@ -10,9 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.DotNet.Cli.Utils;
-using Microsoft.Extensions.Testing.Abstractions;
 using Microsoft.DotNet.ProjectModel;
-using Microsoft.DotNet.ProjectModel.Loader;
+using Microsoft.Extensions.Testing.Abstractions;
+using Microsoft.Extensions.PlatformAbstractions;
 using NuGet.Frameworks;
 using Xunit.Abstractions;
 using ISourceInformationProvider = Xunit.Abstractions.ISourceInformationProvider;
@@ -35,26 +35,8 @@ namespace Xunit.Runner.DotNet
         public static int Main(string[] args)
         {
             DebugHelper.HandleDebugSwitch(ref args);
-
-            var dllPath = args[0];
-            var projectPath = GetProjectPathFromDllPath(dllPath);
-            AssemblyLoadContext.InitializeDefaultContext(ProjectContext.Create(projectPath, FrameworkConstants.CommonFrameworks.DnxCore50, new[] { RuntimeIdentifier.Current }).CreateLoadContext());
-
-            return new Program().Run(args);
-        }
-
-        // This is a temporary workaround.
-        private static string GetProjectPathFromDllPath(string dllPath)
-        {
-            var directory = new DirectoryInfo(Path.GetDirectoryName(dllPath));
-            while (directory != directory.Root && directory.EnumerateFiles().All(f => f.Name != "project.json"))
-            {
-                directory = directory.Parent;
-            }
             
-            var projectFile = directory.EnumerateFiles().FirstOrDefault(f => f.Name == "project.json");
-
-            return projectFile?.FullName;
+            return new Program().Run(args);
         }
 
         public Program()
@@ -106,12 +88,7 @@ namespace Xunit.Runner.DotNet
 
                 if (commandLine.Wait)
                 {
-                    Console.WriteLine();
-
-                    Console.Write("Press ENTER to continue...");
-                    Console.ReadLine();
-
-                    Console.WriteLine();
+                    WaitForInput();
                 }
 
                 return failCount > 0 ? 1 : 0;
@@ -130,6 +107,30 @@ namespace Xunit.Runner.DotNet
             {
                 Console.ResetColor();
             }
+        }
+
+        private static void WaitForInput()
+        {
+            Console.WriteLine();
+
+            Console.Write("Press ENTER to continue...");
+            Console.ReadLine();
+
+            Console.WriteLine();
+        }
+
+        // This is a temporary workaround.
+        private static string GetProjectPathFromDllPath(string dllPath)
+        {
+            var directory = new DirectoryInfo(Path.GetDirectoryName(dllPath));
+            while (directory != directory.Root && directory.EnumerateFiles().All(f => f.Name != "project.json"))
+            {
+                directory = directory.Parent;
+            }
+            
+            var projectFile = directory.EnumerateFiles().FirstOrDefault(f => f.Name == "project.json");
+
+            return projectFile?.FullName;
         }
 
 #if !DNXCORE50
@@ -189,7 +190,9 @@ namespace Xunit.Runner.DotNet
 
         void PrintHeader()
         {
-            Console.WriteLine("xUnit.net DNX Runner ({0}-bit {1})", IntPtr.Size * 8, RuntimeIdentifier.Current);
+            Console.WriteLine("xUnit.net DNX Runner ({0}-bit {1})", 
+                IntPtr.Size * 8, 
+                PlatformServices.Default.Runtime.GetLegacyRestoreRuntimeIdentifier());
         }
 
         static void PrintUsage(IReadOnlyList<IRunnerReporter> reporters)
@@ -369,7 +372,7 @@ namespace Xunit.Runner.DotNet
                             {
                                 foreach (var testcase in vsTestCases.Values)
                                 {
-                                    _testDiscoverySink?.SendTest(testcase);
+                                    _testDiscoverySink?.SendTestFound(testcase);
 
                                     Console.WriteLine(testcase.FullyQualifiedName);
                                 }
