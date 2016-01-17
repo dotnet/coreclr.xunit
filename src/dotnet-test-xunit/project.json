@@ -3,7 +3,7 @@
   "title": "xUnit.net [Runner: dotnet]",
   "description": "Console and Visual Studio runner for xUnit.net.Supported platforms:- dotnet 5.4+",
   "name": "dotnet-test-xunit",
-  "projectUrl": "https://github.com/xunit/dnx.xunit",
+  "projectUrl": "https://github.com/xunit/coreclr.xunit",
   "iconUrl": "https://raw.githubusercontent.com/xunit/media/master/logo-512-transparent.png",
   "licenseUrl": "https://raw.githubusercontent.com/xunit/xunit/master/license.txt",
   "requireLicenseAcceptance": false,

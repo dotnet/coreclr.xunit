@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8EE7A674-CE0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8B1FE5A0-EA59-456D-B293-82B806DDBEFD}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "test.xunit.runner.dnx", "test\test.xunit.runner.dnx\test.xunit.runner.dnx.xproj", "{838070AB-04F2-4A37-9C86-91669E633F70}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "test.dotnet-test-xunit", "test\test.dotnet-test-xunit\test.dotnet-test-xunit.xproj", "{838070AB-04F2-4A37-9C86-91669E633F70}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02FA41F5-A5D0-457A-96E7-724756124491}"
 	ProjectSection(SolutionItems) = preProject

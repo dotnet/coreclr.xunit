@@ -237,7 +237,7 @@ namespace Xunit.Runner.DotNet
 
                     project.Filters.IncludedNameSpaces.Add(option.Value);
                 }
-                // BEGIN: Special command line switches for DNX <=> Visual Studio integration
+                // BEGIN: Special command line switches for dotnet <=> Visual Studio integration
                 else if (optionName == "test" || optionName == "-test")
                 {
                     if (option.Value == null)
@@ -255,7 +255,7 @@ namespace Xunit.Runner.DotNet
                     GuardNoOptionValue(option);
                     DesignTime = true;
                 }
-                // END: Special command line switches for DNX <=> Visual Studio integration
+                // END: Special command line switches for dotnet <=> Visual Studio integration
                 else
                 {
                     // Might be a reporter...
