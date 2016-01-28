@@ -1,6 +1,8 @@
 ﻿{
     "frameworks": {
-        "dnxcore50": { }
+        "dnxcore50": { 
+            "imports": "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS"
+        }
 	},
 	"testRunner":"xunit",
 	"dependencies": {

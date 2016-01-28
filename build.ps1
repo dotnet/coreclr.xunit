@@ -35,7 +35,7 @@ foreach {
 & dotnet pack "src\dotnet-test-xunit" --configuration Release --output "artifacts\packages"
 
 #restore, compile, and run tests
-& dotnet restore "test" -s "artifacts\packages"
+& dotnet restore "test" -s "artifacts\packages\Release"
 dir "test" | where {$_.PsIsContainer} |
 foreach {
     pushd "test\$_"
