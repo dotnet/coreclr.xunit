@@ -163,7 +163,7 @@ namespace Xunit.Runner.DotNet
                         throw new ArgumentException("missing argument for -parallel");
 
                     ParallelismOption parallelismOption;
-                    if (!Enum.TryParse<ParallelismOption>(option.Value, out parallelismOption))
+                    if (!Enum.TryParse<ParallelismOption>(option.Value, ignoreCase: true, result: out parallelismOption))
                         throw new ArgumentException("incorrect argument value for -parallel");
 
                     switch (parallelismOption)
