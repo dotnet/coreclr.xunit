@@ -524,6 +524,7 @@ public class CommandLineTests
         }
 
         [Theory]
+        [InlineData("NONE", false, false)] // should be case insensitive
         [InlineData("None", false, false)]
         [InlineData("Assemblies", true, false)]
         [InlineData("Collections", false, true)]
