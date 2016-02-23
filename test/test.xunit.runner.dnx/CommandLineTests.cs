@@ -674,6 +674,45 @@ public class CommandLineTests
         }
     }
 
+    public class PortOption
+    {
+        [Fact]
+        public static void DefaultValueIsNull()
+        {
+            var commandLine = TestableCommandLine.Parse("assemblyName.dll");
+
+            Assert.Null(commandLine.Port);
+        }
+
+        [Fact]
+        public static void MissingValue()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => TestableCommandLine.Parse("assemblyName.dll", "-port"));
+
+            Assert.Equal("missing argument for -port", ex.Message);
+        }
+
+        [Theory]
+        [InlineData("abc")]
+        public static void InvalidValues(string value)
+        {
+            var ex = Assert.Throws<ArgumentException>(
+                () => TestableCommandLine.Parse("assemblyName.dll", "-port", value));
+
+            Assert.Equal("incorrect argument value for -port (must be a positive number)", ex.Message);
+        }
+
+        [Theory]
+        [InlineData("0", 0)]
+        [InlineData("999", 999)]
+        public static void ValidValues(string value, int expected)
+        {
+            var commandLine = TestableCommandLine.Parse("assemblyName.dll", "-port", value);
+
+            Assert.Equal(expected, commandLine.Port);
+        }
+    }
+
     class MockRunnerReporter : IRunnerReporter
     {
         // Need this here so the runner doesn't complain that this isn't a legal runner reporter. :-p
