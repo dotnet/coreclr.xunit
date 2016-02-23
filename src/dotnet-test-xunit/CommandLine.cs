@@ -52,6 +52,8 @@ namespace Xunit.Runner.DotNet
 
         public bool Wait { get; protected set; }
 
+        public int? Port { get; set; }
+
         static XunitProject GetProjectFile(List<Tuple<string, string>> assemblies)
         {
             var result = new XunitProject();
@@ -254,6 +256,21 @@ namespace Xunit.Runner.DotNet
                 {
                     GuardNoOptionValue(option);
                     DesignTime = true;
+                }
+                else if (optionName == "port" || optionName == "-port")
+                {
+                    if (option.Value == null)
+                    {
+                        throw new ArgumentException("missing argument for -port");
+                    }
+
+                    int port;
+                    if (!int.TryParse(option.Value, out port) || port < 0)
+                    {
+                        throw new ArgumentException("incorrect argument value for -port (must be a positive number)");
+                    }
+
+                    Port = port;
                 }
                 // END: Special command line switches for dotnet <=> Visual Studio integration
                 else

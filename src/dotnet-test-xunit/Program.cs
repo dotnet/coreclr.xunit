@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Threading;
@@ -20,7 +22,7 @@ using VsTestCase = Microsoft.Extensions.Testing.Abstractions.Test;
 
 namespace Xunit.Runner.DotNet
 {
-    public class Program
+    public class Program : IDisposable
     {
 #pragma warning disable 0649
         volatile bool _cancel;
@@ -29,21 +31,18 @@ namespace Xunit.Runner.DotNet
         bool _failed;
         IRunnerLogger _logger;
         IMessageSink _reporterMessageHandler;
-        readonly ITestDiscoverySink _testDiscoverySink;
-        readonly ITestExecutionSink _testExecutionSink;
+        ITestDiscoverySink _testDiscoverySink;
+        ITestExecutionSink _testExecutionSink;
+        private Socket _socket;
 
         public static int Main(string[] args)
         {
             DebugHelper.HandleDebugSwitch(ref args);
-            
-            return new Program().Run(args);
-        }
 
-        public Program()
-        {
-            _testDiscoverySink = new StreamingTestDiscoverySink(Console.OpenStandardOutput());
-
-            _testExecutionSink = new StreamingTestExecutionSink(Console.OpenStandardOutput());
+            using (var program = new Program())
+            {
+                return program.Run(args);
+            }
         }
 
         public int Run(string[] args)
@@ -82,6 +81,15 @@ namespace Xunit.Runner.DotNet
                 if (!commandLine.NoLogo)
                     PrintHeader();
 
+                if (commandLine.Port.HasValue)
+                {
+                    UseTestSinksWithSockets(commandLine);
+                }
+                else
+                {
+                    UseTestSinksWithStandardOutputStreams();
+                }
+
                 var failCount = RunProject(commandLine.Project, commandLine.ParallelizeAssemblies, commandLine.ParallelizeTestCollections,
                                            commandLine.MaxParallelThreads, commandLine.DiagnosticMessages, commandLine.NoColor,
                                            commandLine.DesignTime, commandLine.List, commandLine.DesignTimeTestUniqueNames);
@@ -106,6 +114,32 @@ namespace Xunit.Runner.DotNet
             finally
             {
                 Console.ResetColor();
+            }
+        }
+
+        public void Dispose()
+        {
+            _socket?.Dispose();
+        }
+
+        private void UseTestSinksWithStandardOutputStreams()
+        {
+            _testDiscoverySink = new StreamingTestDiscoverySink(Console.OpenStandardOutput());
+            _testExecutionSink = new StreamingTestExecutionSink(Console.OpenStandardOutput());
+        }
+
+        private void UseTestSinksWithSockets(CommandLine commandLine)
+        {
+            using (var listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+            {
+                listenSocket.Bind(new IPEndPoint(IPAddress.Loopback, commandLine.Port.Value));
+                listenSocket.Listen(10);
+
+                _socket = listenSocket.Accept();
+
+                var networkStream = new NetworkStream(_socket);
+                _testDiscoverySink = new StreamingTestDiscoverySink(networkStream);
+                _testExecutionSink = new StreamingTestExecutionSink(networkStream);
             }
         }
 
@@ -281,7 +315,20 @@ namespace Xunit.Runner.DotNet
 
                 if (parallelizeAssemblies.GetValueOrDefault())
                 {
-                    var tasks = project.Assemblies.Select(assembly => TaskRun(() => ExecuteAssembly(consoleLock, assembly, needsXml, parallelizeTestCollections, maxThreadCount, diagnosticMessages, noColor, project.Filters, designTime, list, designTimeFullyQualifiedNames)));
+                    var tasks = project.Assemblies.Select(assembly => TaskRun(() =>
+                        ExecuteAssembly(
+                            consoleLock,
+                            assembly,
+                            needsXml,
+                            parallelizeTestCollections,
+                            maxThreadCount,
+                            diagnosticMessages,
+                            noColor,
+                            project.Filters,
+                            designTime,
+                            list,
+                            designTimeFullyQualifiedNames)));
+
                     var results = Task.WhenAll(tasks).GetAwaiter().GetResult();
                     foreach (var assemblyElement in results.Where(result => result != null))
                         assembliesElement.Add(assemblyElement);
@@ -290,11 +337,25 @@ namespace Xunit.Runner.DotNet
                 {
                     foreach (var assembly in project.Assemblies)
                     {
-                        var assemblyElement = ExecuteAssembly(consoleLock, assembly, needsXml, parallelizeTestCollections, maxThreadCount, diagnosticMessages, noColor, project.Filters, designTime, list, designTimeFullyQualifiedNames);
+                        var assemblyElement = ExecuteAssembly(
+                            consoleLock,
+                            assembly,
+                            needsXml,
+                            parallelizeTestCollections,
+                            maxThreadCount,
+                            diagnosticMessages,
+                            noColor,
+                            project.Filters,
+                            designTime,
+                            list,
+                            designTimeFullyQualifiedNames);
+
                         if (assemblyElement != null)
                             assembliesElement.Add(assemblyElement);
                     }
                 }
+
+                SendTestCompletedIfNecessary(designTime, list);
 
                 clockTime.Stop();
 
@@ -308,6 +369,23 @@ namespace Xunit.Runner.DotNet
                 transformer(assembliesElement);
 
             return _failed ? 1 : _completionMessages.Values.Sum(summary => summary.Failed);
+        }
+
+        private void SendTestCompletedIfNecessary(bool designTime, bool list)
+        {
+            if (!designTime)
+            {
+                return;
+            }
+
+            if (list)
+            {
+                _testDiscoverySink.SendTestCompleted();
+            }
+            else
+            {
+                _testExecutionSink.SendTestCompleted();
+            }
         }
 
         XElement ExecuteAssembly(object consoleLock,

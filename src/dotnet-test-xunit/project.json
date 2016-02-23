@@ -21,11 +21,11 @@
   "dependencies": {
     "NETStandard.Library": "1.0.0-rc2-23811",
     "System.Threading.ThreadPool": "4.0.10-rc2-23811",
-    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-beta-001370",
-    "Microsoft.DotNet.ProjectModel": "1.0.0-beta-001370",
-    "Microsoft.DotNet.Cli.Utils": "1.0.0-beta-001370",
+    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-beta-001506",
+    "Microsoft.DotNet.ProjectModel": "1.0.0-beta-001506",
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-beta-001506",
     "Microsoft.Extensions.CommandLineUtils.Sources": "1.0.0-*",
-    "NuGet.Packaging.Core": "3.4.0-beta-621",
+    "NuGet.Packaging.Core": "3.4.0-beta-625",
     "xunit.runner.reporters": "2.1.0-rc1-*"
   },
   "repository": {
