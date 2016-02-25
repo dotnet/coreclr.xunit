@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -15,8 +14,8 @@ using Microsoft.DotNet.Cli.Utils;
 using Microsoft.DotNet.ProjectModel;
 using Microsoft.Extensions.Testing.Abstractions;
 using Microsoft.Extensions.PlatformAbstractions;
-using NuGet.Frameworks;
 using Xunit.Abstractions;
+
 using ISourceInformationProvider = Xunit.Abstractions.ISourceInformationProvider;
 using VsTestCase = Microsoft.Extensions.Testing.Abstractions.Test;
 
@@ -130,17 +129,16 @@ namespace Xunit.Runner.DotNet
 
         private void UseTestSinksWithSockets(CommandLine commandLine)
         {
-            using (var listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
-            {
-                listenSocket.Bind(new IPEndPoint(IPAddress.Loopback, commandLine.Port.Value));
-                listenSocket.Listen(10);
+            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-                _socket = listenSocket.Accept();
+            var ipEndPoint = new IPEndPoint(IPAddress.Loopback, commandLine.Port.Value);
 
-                var networkStream = new NetworkStream(_socket);
-                _testDiscoverySink = new StreamingTestDiscoverySink(networkStream);
-                _testExecutionSink = new StreamingTestExecutionSink(networkStream);
-            }
+            _socket.Connect(ipEndPoint);
+
+            var networkStream = new NetworkStream(_socket);
+            var binaryWriter = new BinaryWriter(networkStream);
+            _testDiscoverySink = new BinaryWriterTestDiscoverySink(binaryWriter);
+            _testExecutionSink = new BinaryWriterTestExecutionSink(binaryWriter);
         }
 
         private static void WaitForInput()
