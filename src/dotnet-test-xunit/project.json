@@ -11,11 +11,12 @@
   "version": "99.99.99-dev",
   "compilationOptions": {
     "warningsAsErrors": true,
-    "emitEntryPoint": true
+    "emitEntryPoint": true,
+    "preserveCompilationContext": true
   },
   "frameworks": {
     "dnxcore50": {
-        "imports": "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS"
+      "imports": [ "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS" ]
     }
   },
   "dependencies": {
