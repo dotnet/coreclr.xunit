@@ -18,6 +18,7 @@ using Xunit.Abstractions;
 
 using ISourceInformationProvider = Xunit.Abstractions.ISourceInformationProvider;
 using VsTestCase = Microsoft.Extensions.Testing.Abstractions.Test;
+using Microsoft.Extensions.DependencyModel;
 
 namespace Xunit.Runner.DotNet
 {
@@ -181,34 +182,32 @@ namespace Xunit.Runner.DotNet
         static List<IRunnerReporter> GetAvailableRunnerReporters()
         {
             var result = new List<IRunnerReporter>();
-            var runnerPath = Path.GetDirectoryName(AppContext.BaseDirectory);
+            var dependencyModel = DependencyContext.Load(typeof(Program).GetTypeInfo().Assembly);
+            var assemblyNames = new List<RuntimeAssembly>(dependencyModel.RuntimeLibraries.SelectMany(r => r.Assemblies));
 
-            foreach (var dllFile in Directory.GetFiles(runnerPath, "*.dll").Select(f => Path.Combine(runnerPath, f)))
+            foreach (var assemblyName in assemblyNames)
             {
-                TypeInfo[] types;
-
-                var dllName = Path.GetFileNameWithoutExtension(dllFile);
-
+                Assembly assembly;
                 try
                 {
-                    var assembly = Assembly.Load(new AssemblyName(dllName));
-                    types = assembly.DefinedTypes.ToArray();
+                    assembly = Assembly.Load(assemblyName.Name);
+
                 }
                 catch
                 {
                     continue;
                 }
 
-                foreach (var type in types)
+                foreach (var type in assembly.DefinedTypes)
                 {
-                    if (type == null || type.IsAbstract || type == typeof(DefaultRunnerReporter).GetTypeInfo() || type.ImplementedInterfaces.All(i => i != typeof (IRunnerReporter)))
+                    if (type == null || type.IsAbstract || type == typeof(DefaultRunnerReporter).GetTypeInfo() || type.ImplementedInterfaces.All(i => i != typeof(IRunnerReporter)))
                         continue;
 
                     var ctor = type.DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
                     if (ctor == null)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"Type {type.FullName} in assembly {dllFile} appears to be a runner reporter, but does not have an empty constructor.");
+                        Console.WriteLine($"Type {type.FullName} in assembly {assembly} appears to be a runner reporter, but does not have an empty constructor.");
                         Console.ResetColor();
                         continue;
                     }
