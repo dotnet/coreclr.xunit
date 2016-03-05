@@ -85,3 +85,5 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 .dotnet/*
+
+launchsettings.json

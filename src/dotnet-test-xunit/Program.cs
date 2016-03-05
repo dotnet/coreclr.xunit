@@ -14,6 +14,7 @@ using Microsoft.DotNet.Cli.Utils;
 using Microsoft.DotNet.ProjectModel;
 using Microsoft.Extensions.Testing.Abstractions;
 using Microsoft.Extensions.PlatformAbstractions;
+using Newtonsoft.Json;
 using Xunit.Abstractions;
 
 using ISourceInformationProvider = Xunit.Abstractions.ISourceInformationProvider;
@@ -58,13 +59,13 @@ namespace Xunit.Runner.DotNet
                     return 2;
                 }
 
-#if !DNXCORE50
+#if !NETSTANDARDAPP1_5
                 AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 #endif
 
                 var commandLine = CommandLine.Parse(reporters, args);
 
-#if !DNXCORE50
+#if !NETSTANDARDAPP1_5
                 if (commandLine.Debug)
                     Debugger.Launch();
 #else
@@ -81,9 +82,28 @@ namespace Xunit.Runner.DotNet
                 if (!commandLine.NoLogo)
                     PrintHeader();
 
+                var testsToRun = commandLine.DesignTimeTestUniqueNames;
                 if (commandLine.Port.HasValue)
                 {
-                    UseTestSinksWithSockets(commandLine);
+                    _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                    var ipEndPoint = new IPEndPoint(IPAddress.Loopback, commandLine.Port.Value);
+
+                    _socket.Connect(ipEndPoint);
+                    var networkStream = new NetworkStream(_socket);
+
+                    UseTestSinksWithSockets(networkStream);
+
+                    if (commandLine.WaitCommand)
+                    {
+                        var reader = new BinaryReader(networkStream);
+                        _testExecutionSink.SendWaitingCommand();
+
+                        var rawMessage = reader.ReadString();
+                        var message = JsonConvert.DeserializeObject<Message>(rawMessage);
+
+                        testsToRun = message.Payload.ToObject<RunTestsMessage>().Tests;
+                    }
                 }
                 else
                 {
@@ -92,7 +112,7 @@ namespace Xunit.Runner.DotNet
 
                 var failCount = RunProject(commandLine.Project, commandLine.ParallelizeAssemblies, commandLine.ParallelizeTestCollections,
                                            commandLine.MaxParallelThreads, commandLine.DiagnosticMessages, commandLine.NoColor,
-                                           commandLine.DesignTime, commandLine.List, commandLine.DesignTimeTestUniqueNames);
+                                           commandLine.DesignTime, commandLine.List, testsToRun);
 
                 if (commandLine.Wait)
                 {
@@ -128,15 +148,8 @@ namespace Xunit.Runner.DotNet
             _testExecutionSink = new StreamingTestExecutionSink(Console.OpenStandardOutput());
         }
 
-        private void UseTestSinksWithSockets(CommandLine commandLine)
+        private void UseTestSinksWithSockets(NetworkStream networkStream)
         {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            var ipEndPoint = new IPEndPoint(IPAddress.Loopback, commandLine.Port.Value);
-
-            _socket.Connect(ipEndPoint);
-
-            var networkStream = new NetworkStream(_socket);
             var binaryWriter = new BinaryWriter(networkStream);
             _testDiscoverySink = new BinaryWriterTestDiscoverySink(binaryWriter);
             _testExecutionSink = new BinaryWriterTestExecutionSink(binaryWriter);
@@ -160,13 +173,13 @@ namespace Xunit.Runner.DotNet
             {
                 directory = directory.Parent;
             }
-            
+
             var projectFile = directory.EnumerateFiles().FirstOrDefault(f => f.Name == "project.json");
 
             return projectFile?.FullName;
         }
 
-#if !DNXCORE50
+#if !NETSTANDARDAPP1_5
         static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var ex = e.ExceptionObject as Exception;

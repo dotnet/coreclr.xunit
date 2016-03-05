@@ -713,6 +713,37 @@ public class CommandLineTests
         }
     }
 
+    public class WaitCommandSwitch
+    {
+        [Theory]
+        [InlineData("-wait-command")]
+        [InlineData("--wait-command")]
+        public static void WaitCommandValidArguments(string arg)
+        {
+            var arguments = new[] { "assemblyName.dll", arg, "--port", "1" };
+
+            var commandLine = TestableCommandLine.Parse(arguments);
+
+            Assert.True(commandLine.WaitCommand);
+        }
+
+        [Fact]
+        public void WaitCommandWithPortThrowsArgumentException()
+        {
+            var ex = Assert.Throws<ArgumentException>(() => TestableCommandLine.Parse("assemblyName.dll", "-wait-command"));
+
+            Assert.Equal("when specifing --wait-command you must also pass a port using --port", ex.Message);
+        }
+
+        [Fact]
+        public static void DefaultValueIsFalse()
+        {
+            var commandLine = TestableCommandLine.Parse("assemblyName.dll");
+
+            Assert.False(commandLine.WaitCommand);
+        }
+    }
+
     class MockRunnerReporter : IRunnerReporter
     {
         // Need this here so the runner doesn't complain that this isn't a legal runner reporter. :-p

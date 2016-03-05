@@ -6,21 +6,10 @@ using Newtonsoft.Json.Linq;
 
 namespace Xunit.Runner.DotNet
 {
-    public class BinaryWriterTestDiscoverySink : ITestDiscoverySink
+    public class BinaryWriterTestDiscoverySink : BinaryWriterTestSink, ITestDiscoverySink
     {
-        private readonly BinaryWriter _binaryWriter;
-
-        public BinaryWriterTestDiscoverySink(BinaryWriter binaryWriter)
+        public BinaryWriterTestDiscoverySink(BinaryWriter binaryWriter) : base(binaryWriter)
         {
-            _binaryWriter = binaryWriter;
-        }
-
-        public void SendTestCompleted()
-        {
-            _binaryWriter.Write(JsonConvert.SerializeObject(new Message
-            {
-                MessageType = "TestRunner.TestCompleted"
-            }));
         }
 
         public void SendTestFound(Test test)
@@ -30,7 +19,7 @@ namespace Xunit.Runner.DotNet
                 throw new ArgumentNullException(nameof(test));
             }
 
-            _binaryWriter.Write(JsonConvert.SerializeObject(new Message
+            BinaryWriter.Write(JsonConvert.SerializeObject(new Message
             {
                 MessageType = "TestDiscovery.TestFound",
                 Payload = JToken.FromObject(test),
