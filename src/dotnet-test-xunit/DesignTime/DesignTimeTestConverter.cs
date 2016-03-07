@@ -10,7 +10,7 @@ namespace Xunit.Runner.DotNet
 {
     public static class DesignTimeTestConverter
     {
-#if DNXCORE50
+#if NETSTANDARDAPP1_5
         private readonly static HashAlgorithm Hash = SHA1.Create();
 #else
         private readonly static HashAlgorithm _hash = new SHA1Managed();

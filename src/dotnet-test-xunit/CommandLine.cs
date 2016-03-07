@@ -54,6 +54,8 @@ namespace Xunit.Runner.DotNet
 
         public int? Port { get; set; }
 
+        public bool WaitCommand { get; set; }
+
         static XunitProject GetProjectFile(List<Tuple<string, string>> assemblies)
         {
             var result = new XunitProject();
@@ -272,6 +274,11 @@ namespace Xunit.Runner.DotNet
 
                     Port = port;
                 }
+                else if (optionName == "wait-command" || optionName == "-wait-command")
+                {
+                    GuardNoOptionValue(option);
+                    WaitCommand = true;
+                }
                 // END: Special command line switches for dotnet <=> Visual Studio integration
                 else
                 {
@@ -297,6 +304,11 @@ namespace Xunit.Runner.DotNet
                         project.Output.Add(optionName, option.Value);
                     }
                 }
+            }
+
+            if (WaitCommand && !Port.HasValue)
+            {
+                throw new ArgumentException("when specifing --wait-command you must also pass a port using --port");
             }
 
             return project;

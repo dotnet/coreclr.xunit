@@ -7,23 +7,13 @@ using Newtonsoft.Json.Linq;
 
 namespace Xunit.Runner.DotNet
 {
-    public class BinaryWriterTestExecutionSink : ITestExecutionSink
+    public class BinaryWriterTestExecutionSink : BinaryWriterTestSink, ITestExecutionSink
     {
-        private readonly BinaryWriter _binaryWriter;
         private readonly ConcurrentDictionary<string, TestState> _runningTests;
 
-        public BinaryWriterTestExecutionSink(BinaryWriter binaryWriter)
+        public BinaryWriterTestExecutionSink(BinaryWriter binaryWriter) : base(binaryWriter)
         {
-            _binaryWriter = binaryWriter;
             _runningTests = new ConcurrentDictionary<string, TestState>();
-        }
-
-        public void SendTestCompleted()
-        {
-            _binaryWriter.Write(JsonConvert.SerializeObject(new Message
-            {
-                MessageType = "TestRunner.TestCompleted"
-            }));
         }
 
         public void SendTestStarted(Test test)
@@ -39,7 +29,7 @@ namespace Xunit.Runner.DotNet
                 _runningTests.TryAdd(test.FullyQualifiedName, state);
             }
 
-            _binaryWriter.Write(JsonConvert.SerializeObject(new Message
+            BinaryWriter.Write(JsonConvert.SerializeObject(new Message
             {
                 MessageType = "TestExecution.TestStarted",
                 Payload = JToken.FromObject(test),
@@ -66,7 +56,7 @@ namespace Xunit.Runner.DotNet
                 testResult.EndTime = DateTimeOffset.Now;
             }
 
-            _binaryWriter.Write(JsonConvert.SerializeObject(new Message
+            BinaryWriter.Write(JsonConvert.SerializeObject(new Message
             {
                 MessageType = "TestExecution.TestResult",
                 Payload = JToken.FromObject(testResult),

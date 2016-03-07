@@ -1,12 +1,21 @@
 ﻿{
-    "frameworks": {
-        "dnxcore50": { 
-            "imports": "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS"
-        }
-	},
+  "frameworks": {
+    "dnxcore50": {
+      "imports": [
+        "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS",
+        "portable-net45+win8",
+        "netstandardapp1.5"
+      ]
+    }
+  },
 	"testRunner":"xunit",
-	"dependencies": {
-		"xunit": "2.1.0",
-		"dotnet-test-xunit": { "version":"99.99.99-dev", "target": "package"}
-	}
+  "dependencies": {
+    "NETStandard.Library": "1.0.0-rc2-23901",
+    "System.IO.Compression": "4.1.0-rc2-23901",
+    "xunit": "2.1.0",
+    "dotnet-test-xunit": {
+      "version": "99.99.99-dev",
+      "target": "package"
+    }
+  }
 }
