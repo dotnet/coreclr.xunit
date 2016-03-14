@@ -1,10 +1,10 @@
 ﻿{
   "frameworks": {
-    "dnxcore50": {
+    "netstandardapp1.5": {
       "imports": [
-        "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS",
-        "portable-net45+win8",
-        "netstandardapp1.5"
+        "dnxcore50",
+        "portable-net45+wp80+win8+wpa81+dnxcore50",
+        "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS"
       ]
     }
   },
