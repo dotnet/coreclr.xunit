@@ -25,14 +25,13 @@
   },
   "dependencies": {
     "NETStandard.Library": "1.0.0-rc2-23901",
-    "System.Threading.ThreadPool": "4.0.10-rc2-23901",
     "Microsoft.Extensions.Testing.Abstractions": "1.0.0-beta-001636",
     "Microsoft.DotNet.ProjectModel": "1.0.0-beta-001636",
     "Microsoft.DotNet.Cli.Utils": "1.0.0-beta-001636",
-    "Microsoft.Extensions.CommandLineUtils.Sources": "1.0.0-*",
-    "NuGet.Packaging.Core": "3.4.0-beta-625",
+    "Microsoft.Extensions.CommandLineUtils.Sources": { "version": "1.0.0-*", "type": "build" },
     "xunit.runner.reporters": "2.1.0-rc1-*",
-    "System.IO.Compression": "4.1.0-rc2-23901"    
+    "System.IO.Compression": "4.1.0-rc2-23901",
+    "System.Threading.ThreadPool": "4.0.10-rc2-23901"
   },
   "repository": {
     "type": "git",
