@@ -200,32 +200,29 @@ namespace Xunit.Runner.DotNet
 
             foreach (var assemblyName in assemblyNames)
             {
-                Assembly assembly;
                 try
                 {
-                    assembly = Assembly.Load(assemblyName.Name);
+                    var assembly = Assembly.Load(assemblyName.Name);
+                    foreach (var type in assembly.DefinedTypes)
+                    {
+                        if (type == null || type.IsAbstract || type == typeof(DefaultRunnerReporter).GetTypeInfo() || type.ImplementedInterfaces.All(i => i != typeof(IRunnerReporter)))
+                            continue;
 
+                        var ctor = type.DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
+                        if (ctor == null)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine($"Type {type.FullName} in assembly {assembly} appears to be a runner reporter, but does not have an empty constructor.");
+                            Console.ResetColor();
+                            continue;
+                        }
+
+                        result.Add((IRunnerReporter)ctor.Invoke(new object[0]));
+                    }
                 }
                 catch
                 {
                     continue;
-                }
-
-                foreach (var type in assembly.DefinedTypes)
-                {
-                    if (type == null || type.IsAbstract || type == typeof(DefaultRunnerReporter).GetTypeInfo() || type.ImplementedInterfaces.All(i => i != typeof(IRunnerReporter)))
-                        continue;
-
-                    var ctor = type.DeclaredConstructors.FirstOrDefault(c => c.GetParameters().Length == 0);
-                    if (ctor == null)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"Type {type.FullName} in assembly {assembly} appears to be a runner reporter, but does not have an empty constructor.");
-                        Console.ResetColor();
-                        continue;
-                    }
-
-                    result.Add((IRunnerReporter)ctor.Invoke(new object[0]));
                 }
             }
 
