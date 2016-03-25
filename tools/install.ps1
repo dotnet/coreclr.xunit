@@ -7,8 +7,8 @@ $ErrorActionPreference="Stop"
 $ProgressPreference="SilentlyContinue"
 
 $Feed="https://dotnetcli.blob.core.windows.net/dotnet"
-$Channel="dev"
-$DotNetFileName="dotnet-win-x64.latest.zip"
+$Channel="beta"
+$DotNetFileName="dotnet-dev-win-x64.latest.zip"
 $DotNetUrl="$Feed/$Channel/Binaries/Latest"
 
 function say($str)

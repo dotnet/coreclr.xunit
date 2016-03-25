@@ -24,14 +24,14 @@
     }
   },
   "dependencies": {
-    "NETStandard.Library": "1.0.0-rc2-23901",
-    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-beta-001636",
-    "Microsoft.DotNet.ProjectModel": "1.0.0-beta-001636",
-    "Microsoft.DotNet.Cli.Utils": "1.0.0-beta-001636",
+    "Microsoft.NETCore.App": "1.0.0-rc2-23924",
+    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-beta-002022",
+    "Microsoft.DotNet.ProjectModel": "1.0.0-beta-002022",
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-beta-002022",
     "Microsoft.Extensions.CommandLineUtils.Sources": { "version": "1.0.0-*", "type": "build" },
     "xunit.runner.reporters": "2.1.0-rc1-*",
-    "System.IO.Compression": "4.1.0-rc2-23901",
-    "System.Threading.ThreadPool": "4.0.10-rc2-23901"
+    "System.IO.Compression": "4.1.0-rc2-23924",
+    "System.Threading.ThreadPool": "4.0.10-rc2-23924"
   },
   "repository": {
     "type": "git",
