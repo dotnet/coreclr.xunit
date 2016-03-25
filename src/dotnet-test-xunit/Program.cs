@@ -196,13 +196,12 @@ namespace Xunit.Runner.DotNet
         {
             var result = new List<IRunnerReporter>();
             var dependencyModel = DependencyContext.Load(typeof(Program).GetTypeInfo().Assembly);
-            var assemblyNames = new List<RuntimeAssembly>(dependencyModel.RuntimeLibraries.SelectMany(r => r.Assemblies));
 
-            foreach (var assemblyName in assemblyNames)
+            foreach (var assemblyName in dependencyModel.GetRuntimeAssemblyNames(PlatformServices.Default.Runtime.GetRuntimeIdentifier()))
             {
                 try
                 {
-                    var assembly = Assembly.Load(assemblyName.Name);
+                    var assembly = Assembly.Load(new AssemblyName(assemblyName));
                     foreach (var type in assembly.DefinedTypes)
                     {
                         if (type == null || type.IsAbstract || type == typeof(DefaultRunnerReporter).GetTypeInfo() || type.ImplementedInterfaces.All(i => i != typeof(IRunnerReporter)))
@@ -231,8 +230,8 @@ namespace Xunit.Runner.DotNet
 
         void PrintHeader()
         {
-            Console.WriteLine("xUnit.net DNX Runner ({0}-bit {1})", 
-                IntPtr.Size * 8, 
+            Console.WriteLine("xUnit.net DNX Runner ({0}-bit {1})",
+                IntPtr.Size * 8,
                 PlatformServices.Default.Runtime.GetLegacyRestoreRuntimeIdentifier());
         }
 
