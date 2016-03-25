@@ -159,7 +159,6 @@ public class CommandLineTests
             var arguments = new[] { "assemblyName.dll" };
 
             var commandLine = TestableCommandLine.Parse(arguments);
-
             Assert.False(commandLine.Wait);
         }
 

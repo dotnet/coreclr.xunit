@@ -3,8 +3,7 @@
     "netstandardapp1.5": {
       "imports": [
         "dnxcore50",
-        "portable-net45+wp80+win8+wpa81+dnxcore50",
-        "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS"
+        "portable-net45+win8"
       ]
     }
   },

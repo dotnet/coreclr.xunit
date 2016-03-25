@@ -18,16 +18,15 @@
     "netstandardapp1.5": {
       "imports": [
         "dnxcore50",
-        "portable-net45+wp80+win8+wpa81+dnxcore50",
-        "portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS",
+        "portable-net45+win8"
       ]
     }
   },
   "dependencies": {
     "Microsoft.NETCore.App": "1.0.0-rc2-23924",
-    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-beta-002022",
-    "Microsoft.DotNet.ProjectModel": "1.0.0-beta-002022",
-    "Microsoft.DotNet.Cli.Utils": "1.0.0-beta-002022",
+    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-beta-002026",
+    "Microsoft.DotNet.ProjectModel": "1.0.0-beta-002026",
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-beta-002026",
     "Microsoft.Extensions.CommandLineUtils.Sources": { "version": "1.0.0-*", "type": "build" },
     "xunit.runner.reporters": "2.1.0-rc1-*",
     "System.IO.Compression": "4.1.0-rc2-23924",
