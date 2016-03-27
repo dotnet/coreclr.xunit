@@ -71,7 +71,7 @@ namespace Xunit.Runner.DotNet
 #else
                 if (commandLine.Debug)
                 {
-                    Console.WriteLine("Debug support is not available in DNX Core.");
+                    Console.WriteLine("Debug support is not available in .NET Core.");
                     return -1;
                 }
 #endif
@@ -230,7 +230,7 @@ namespace Xunit.Runner.DotNet
 
         void PrintHeader()
         {
-            Console.WriteLine("xUnit.net DNX Runner ({0}-bit {1})",
+            Console.WriteLine("xUnit.net Runner ({0}-bit {1})",
                 IntPtr.Size * 8,
                 PlatformServices.Default.Runtime.GetLegacyRestoreRuntimeIdentifier());
         }
@@ -255,7 +255,7 @@ namespace Xunit.Runner.DotNet
             Console.WriteLine("                         :   (number)  - limit task thread pool size to 'count'");
             Console.WriteLine("  -wait                  : wait for input after completion");
             Console.WriteLine("  -diagnostics           : enable diagnostics messages for all test assemblies");
-#if !DNXCORE50
+#if !NETSTANDARDAPP1_5
             Console.WriteLine("  -debug                 : launch the debugger to debug the tests");
 #endif
             Console.WriteLine("  -trait \"name=value\"    : only run tests with matching name/value traits");
