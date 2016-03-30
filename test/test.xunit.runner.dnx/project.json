@@ -9,8 +9,8 @@
   },
 	"testRunner":"xunit",
   "dependencies": {
-    "Microsoft.NETCore.App": "1.0.0-rc2-23924",
-    "System.IO.Compression": "4.1.0-rc2-23924",
+    "Microsoft.NETCore.App": "1.0.0-rc2-23929",
+    "System.IO.Compression": "4.1.0-rc2-23929",
     "xunit": "2.1.0",
     "dotnet-test-xunit": {
       "version": "99.99.99-dev",
