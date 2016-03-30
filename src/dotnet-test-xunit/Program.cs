@@ -201,7 +201,7 @@ namespace Xunit.Runner.DotNet
             {
                 try
                 {
-                    var assembly = Assembly.Load(new AssemblyName(assemblyName));
+                    var assembly = Assembly.Load(assemblyName);
                     foreach (var type in assembly.DefinedTypes)
                     {
                         if (type == null || type.IsAbstract || type == typeof(DefaultRunnerReporter).GetTypeInfo() || type.ImplementedInterfaces.All(i => i != typeof(IRunnerReporter)))
