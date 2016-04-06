@@ -10,7 +10,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.DotNet.Cli.Utils;
 using Microsoft.DotNet.ProjectModel;
 using Microsoft.Extensions.Testing.Abstractions;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -38,8 +37,6 @@ namespace Xunit.Runner.DotNet
 
         public static int Main(string[] args)
         {
-            DebugHelper.HandleDebugSwitch(ref args);
-
             using (var program = new Program())
             {
                 return program.Run(args);
@@ -232,7 +229,7 @@ namespace Xunit.Runner.DotNet
         {
             Console.WriteLine("xUnit.net Runner ({0}-bit {1})",
                 IntPtr.Size * 8,
-                PlatformServices.Default.Runtime.GetLegacyRestoreRuntimeIdentifier());
+                PlatformServices.Default.Runtime.GetRuntimeIdentifier());
         }
 
         static void PrintUsage(IReadOnlyList<IRunnerReporter> reporters)
@@ -524,8 +521,8 @@ namespace Xunit.Runner.DotNet
             var assemblyName = Path.GetFileNameWithoutExtension(assembly.AssemblyFilename);
             var pdbPath = Path.Combine(directoryPath, assemblyName + FileNameSuffixes.DotNet.ProgramDatabase);
 
-            return File.Exists(pdbPath) 
-                ? new SourceInformationProviderAdapater(new SourceInformationProvider(pdbPath, null)) 
+            return File.Exists(pdbPath)
+                ? new SourceInformationProviderAdapater(new SourceInformationProvider(pdbPath, null))
                 : null;
         }
 
