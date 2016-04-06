@@ -30,11 +30,11 @@ foreach {
 }
 
 # Restore packages and build product
-& dotnet restore "src\dotnet-test-xunit"
+& dotnet restore "src\dotnet-test-xunit" --infer-runtimes
 & dotnet pack "src\dotnet-test-xunit" --configuration Release --output "artifacts\packages"
 
 #restore, compile, and run tests
-& dotnet restore "test" -f "artifacts\packages"
+& dotnet restore "test" -f "artifacts\packages" --infer-runtimes
 dir "test" | where {$_.PsIsContainer} |
 foreach {
     pushd "test\$_"
