@@ -1,13 +1,13 @@
 ﻿{
   "frameworks": {
-    "netstandardapp1.5": {
+    "netcoreapp1.0": {
       "imports": [
         "dnxcore50",
         "portable-net45+win8"
       ]
     }
   },
-	"testRunner":"xunit",
+  "testRunner":"xunit",
   "dependencies": {
     "Microsoft.NETCore.App": "1.0.0-rc2-23931",
     "System.IO.Compression": "4.1.0-rc2-23931",

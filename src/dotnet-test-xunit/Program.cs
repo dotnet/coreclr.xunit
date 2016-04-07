@@ -56,13 +56,13 @@ namespace Xunit.Runner.DotNet
                     return 2;
                 }
 
-#if !NETSTANDARDAPP1_5
+#if !NETSTANDARDAPP1_5 && !NETCOREAPP1_0
                 AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 #endif
 
                 var commandLine = CommandLine.Parse(reporters, args);
 
-#if !NETSTANDARDAPP1_5
+#if !NETSTANDARDAPP1_5 && !NETCOREAPP1_0
                 if (commandLine.Debug)
                     Debugger.Launch();
 #else
@@ -176,7 +176,7 @@ namespace Xunit.Runner.DotNet
             return projectFile?.FullName;
         }
 
-#if !NETSTANDARDAPP1_5
+#if !NETSTANDARDAPP1_5 && !NETCOREAPP1_0
         static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var ex = e.ExceptionObject as Exception;
