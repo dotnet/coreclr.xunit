@@ -56,13 +56,13 @@ namespace Xunit.Runner.DotNet
                     return 2;
                 }
 
-#if !NETSTANDARDAPP1_5
+#if !NETSTANDARD1_5
                 AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 #endif
 
                 var commandLine = CommandLine.Parse(reporters, args);
 
-#if !NETSTANDARDAPP1_5
+#if !NETSTANDARD1_5
                 if (commandLine.Debug)
                     Debugger.Launch();
 #else
@@ -176,7 +176,7 @@ namespace Xunit.Runner.DotNet
             return projectFile?.FullName;
         }
 
-#if !NETSTANDARDAPP1_5
+#if !NETSTANDARD1_5
         static void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var ex = e.ExceptionObject as Exception;
@@ -252,7 +252,7 @@ namespace Xunit.Runner.DotNet
             Console.WriteLine("                         :   (number)  - limit task thread pool size to 'count'");
             Console.WriteLine("  -wait                  : wait for input after completion");
             Console.WriteLine("  -diagnostics           : enable diagnostics messages for all test assemblies");
-#if !NETSTANDARDAPP1_5
+#if !NETSTANDARD1_5
             Console.WriteLine("  -debug                 : launch the debugger to debug the tests");
 #endif
             Console.WriteLine("  -trait \"name=value\"    : only run tests with matching name/value traits");
