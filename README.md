@@ -2,6 +2,8 @@
 
 This runner supports [xUnit.net](https://github.com/xunit/xunit) tests for [dotnet 4.5.1+, and dotnet Core 5+](https://github.com/dotnet/corefx) (this includes [ASP.NET 5+](https://github.com/aspnet)).
 
+![](https://mseng.visualstudio.com/_apis/public/build/definitions/d09b7a4d-0a51-4c0e-a15a-07921d5b558f/3249/badge)
+
 ### Usage
 
 To install this package, ensure your project.json contains the following lines:
