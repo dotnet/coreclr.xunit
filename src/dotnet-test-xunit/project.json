@@ -17,25 +17,27 @@
   "frameworks": {
     "netcoreapp1.0": {
       "imports": [
-        "dnxcore50",
+        "dotnet",
+        "portable-dnxcore50+net45+win8+wp8+wpa81",
         "portable-net45+win8"
       ]
     },
     "netstandardapp1.5": {
       "imports": [
-        "dnxcore50",
+        "dotnet",
+        "portable-dnxcore50+net45+win8+wp8+wpa81",
         "portable-net45+win8"
       ]
     }
   },
   "dependencies": {
-    "Microsoft.NETCore.App": "1.0.0-rc2-23931",
-    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-beta-002254",
-    "Microsoft.Extensions.CommandLineUtils.Sources": {
-      "version": "1.0.0-*",
-      "type": "build"
+    "Microsoft.NETCore.App": {
+      "version": "1.0.0-rc2-24008",
+      "type": "platform"
     },
-    "xunit.runner.reporters": "2.1.0-rc1-*"
+    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-rc2-002353",
+    "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
+    "xunit.runner.reporters": "2.1.0"
   },
   "repository": {
     "type": "git",
