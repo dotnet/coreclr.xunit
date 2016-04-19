@@ -10,11 +10,8 @@ namespace Xunit.Runner.DotNet
 {
     public static class DesignTimeTestConverter
     {
-#if NETSTANDARDAPP1_5 || NETCOREAPP1_0
         private readonly static HashAlgorithm Hash = SHA1.Create();
-#else
-        private readonly static HashAlgorithm _hash = new SHA1Managed();
-#endif
+
         public static IDictionary<ITestCase, VsTestCase> Convert(IEnumerable<ITestCase> testcases)
         {
             // When tests have the same class name and method name, generate unique names for display

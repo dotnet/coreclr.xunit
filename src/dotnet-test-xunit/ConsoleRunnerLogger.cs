@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NET451
+using System;
 
 namespace Xunit
 {
@@ -78,3 +79,4 @@ namespace Xunit
         }
     }
 }
+#endif
