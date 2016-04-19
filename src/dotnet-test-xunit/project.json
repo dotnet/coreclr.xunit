@@ -23,7 +23,7 @@
       ],
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.0-rc2-24015",
+          "version": "1.0.0-rc2-24018",
           "type": "platform"
         }
       }
@@ -36,7 +36,7 @@
       ],
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.0-rc2-24015",
+          "version": "1.0.0-rc2-24018",
           "type": "platform"
         }
       }
@@ -48,7 +48,7 @@
     }
   },
   "dependencies": {
-    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-rc2-002353",
+    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-rc2-002426",
     "Microsoft.Extensions.CommandLineUtils": "1.0.0-rc2-*",
     "xunit.runner.reporters": "2.1.0"
   },
