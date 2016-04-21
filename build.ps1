@@ -36,7 +36,40 @@ if ($LASTEXITCODE -ne 0)
     throw "dotnet restore failed with exit code $LASTEXITCODE"
 }
 
-& dotnet pack "src\dotnet-test-xunit" --configuration Release --output "artifacts\packages"
+$outputDir = "$PWD\src\dotnet-test-xunit\bin\Release"
+$extractDirectory = "$PWD\src\dotnet-test-xunit\obj\extract"
+if (Test-Path $outputDir) {
+    rm -r -force $outputDir
+}
+
+if (Test-Path $extractDirectory) {
+    rm -r -force $extractDirectory
+}
+
+& dotnet pack "src\dotnet-test-xunit" --configuration Release -o $outputDir
+
+$nupkgFile = ls $outputDir *.nupkg | ?{ !$_.Name.Contains("symbols") } | Select -First 1
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::ExtractToDirectory($nupkgFile.FullName, $extractDirectory)
+
+$x64Dir = md "$extractDirectory\runtimes\win7-x64\lib\net451\"
+$x86Dir = md "$extractDirectory\runtimes\win7-x86\lib\net451\"
+$unixDir = md "$extractDirectory\runtimes\unix-x64\lib\net451\"
+cp $extractDirectory\lib\net451\dotnet-test-xunit.exe $x64Dir\dotnet-test-xunit.exe
+cp $extractDirectory\lib\net451\dotnet-test-xunit.exe $unixDir\dotnet-test-xunit.exe
+
+# Compile for net451 win7-x86
+& dotnet build "src\dotnet-test-xunit" --configuration release_x86 -f net451 --no-dependencies
+cp $outputDir\..\release_x86\net451\dotnet-test-xunit.exe $x86Dir\dotnet-test-xunit.exe
+
+rm $nupkgFile.FullName
+if (Test-Path $PWD\artifacts) {
+    rm -r -force $PWD\artifacts
+}
+
+md $PWD\artifacts\packages | Out-Null
+
+[System.IO.Compression.ZipFile]::CreateFromDirectory($extractDirectory, "$PWD\artifacts\packages\$nupkgFile")
 
 #restore, compile, and run tests
 & dotnet restore "test" -f "artifacts\packages" --infer-runtimes
