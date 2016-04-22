@@ -14,6 +14,18 @@
     "emitEntryPoint": true,
     "preserveCompilationContext": true
   },
+  "configurations": {
+    "debug_x86": {
+      "compilationOptions": {
+        "platform": "anycpu32bitpreferred"
+      }
+    },
+    "release_x86": {
+      "compilationOptions": {
+        "platform": "anycpu32bitpreferred"
+      }
+    }
+  },
   "frameworks": {
     "netcoreapp1.0": {
       "imports": [
