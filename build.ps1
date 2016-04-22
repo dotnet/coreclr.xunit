@@ -69,7 +69,20 @@ if (Test-Path $PWD\artifacts) {
 
 md $PWD\artifacts\packages | Out-Null
 
-[System.IO.Compression.ZipFile]::CreateFromDirectory($extractDirectory, "$PWD\artifacts\packages\$nupkgFile")
+@('_rels', '[Content_Types].xml') | %{
+    $pathToDelete = Join-Path $extractDirectory $_
+    if (Test-Path -LiteralPath $pathToDelete) {
+        rm -r -force -literalPath $pathToDelete
+    }
+}
+
+# Download latest nuget
+$nugetExePath = "$PWD\.dotnet\nuget.exe"
+if (!(Test-Path $nugetExePath)) {
+    Invoke-WebRequest -Uri https://dist.nuget.org/win-x86-commandline/v3.4.2-rc/nuget.exe -OutFile $nugetExePath
+}
+
+& $nugetExePath pack $extractDirectory\dotnet-test-xunit.nuspec -out $PWD\artifacts\packages
 
 #restore, compile, and run tests
 & dotnet restore "test" -f "artifacts\packages" --infer-runtimes
