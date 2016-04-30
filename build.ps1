@@ -85,11 +85,10 @@ if (!(Test-Path $nugetExePath)) {
 & $nugetExePath pack $extractDirectory\dotnet-test-xunit.nuspec -out $PWD\artifacts\packages
 
 #restore, compile, and run tests
-& dotnet restore "test" -f "artifacts\packages" --infer-runtimes
+& dotnet restore "test" -f "artifacts\packages"
 dir "test" | where {$_.PsIsContainer} |
 foreach {
     pushd "test\$_"
-    & dotnet build
     & dotnet test
     popd
 }

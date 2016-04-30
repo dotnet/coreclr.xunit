@@ -3,25 +3,31 @@
   "title": "xUnit.net [Runner: dotnet]",
   "description": "Console and Visual Studio runner for xUnit.net.Supported platforms:- dotnet 5.4+",
   "name": "dotnet-test-xunit",
-  "projectUrl": "https://github.com/xunit/coreclr.xunit",
-  "iconUrl": "https://raw.githubusercontent.com/xunit/media/master/logo-512-transparent.png",
-  "licenseUrl": "https://raw.githubusercontent.com/xunit/xunit/master/license.txt",
-  "requireLicenseAcceptance": false,
   "developmentDependency": true,
   "version": "99.99.99-rc2",
-  "compilationOptions": {
+  "buildOptions": {
     "warningsAsErrors": true,
     "emitEntryPoint": true,
     "preserveCompilationContext": true
   },
+  "packOptions": {
+    "projectUrl": "https://github.com/xunit/coreclr.xunit",
+    "iconUrl": "https://raw.githubusercontent.com/xunit/media/master/logo-512-transparent.png",
+    "licenseUrl": "https://raw.githubusercontent.com/xunit/xunit/master/license.txt",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/xunit/coreclr.xunit"
+    }
+  },
   "configurations": {
     "debug_x86": {
-      "compilationOptions": {
+      "buildOptions": {
         "platform": "anycpu32bitpreferred"
       }
     },
     "release_x86": {
-      "compilationOptions": {
+      "buildOptions": {
         "platform": "anycpu32bitpreferred"
       }
     }
@@ -35,7 +41,7 @@
       ],
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.0-rc2-24018",
+          "version": "1.0.0-rc2-3002543",
           "type": "platform"
         }
       }
@@ -48,7 +54,7 @@
       ],
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.0-rc2-24018",
+          "version": "1.0.0-rc2-3002543",
           "type": "platform"
         }
       }
@@ -60,12 +66,7 @@
     }
   },
   "dependencies": {
-    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-rc2-002426",
-    "Microsoft.Extensions.CommandLineUtils": "1.0.0-rc2-*",
+    "Microsoft.Extensions.Testing.Abstractions": "1.0.0-rc2-002577",
     "xunit.runner.reporters": "2.1.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/xunit/coreclr.xunit"
   }
 }

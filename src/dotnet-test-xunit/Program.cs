@@ -10,15 +10,14 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.DotNet.InternalAbstractions;
 using Microsoft.DotNet.ProjectModel;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.Testing.Abstractions;
-using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
 using Xunit.Abstractions;
-
 using ISourceInformationProvider = Xunit.Abstractions.ISourceInformationProvider;
 using VsTestCase = Microsoft.Extensions.Testing.Abstractions.Test;
-using Microsoft.Extensions.DependencyModel;
 
 namespace Xunit.Runner.DotNet
 {
@@ -194,7 +193,7 @@ namespace Xunit.Runner.DotNet
             var result = new List<IRunnerReporter>();
             var dependencyModel = DependencyContext.Load(typeof(Program).GetTypeInfo().Assembly);
 
-            foreach (var assemblyName in dependencyModel.GetRuntimeAssemblyNames(PlatformServices.Default.Runtime.GetRuntimeIdentifier()))
+            foreach (var assemblyName in dependencyModel.GetRuntimeAssemblyNames(RuntimeEnvironment.GetRuntimeIdentifier()))
             {
                 try
                 {
@@ -229,7 +228,7 @@ namespace Xunit.Runner.DotNet
         {
             Console.WriteLine("xUnit.net Runner ({0}-bit {1})",
                 IntPtr.Size * 8,
-                PlatformServices.Default.Runtime.GetRuntimeIdentifier());
+                RuntimeEnvironment.GetRuntimeIdentifier());
         }
 
         static void PrintUsage(IReadOnlyList<IRunnerReporter> reporters)
@@ -522,7 +521,7 @@ namespace Xunit.Runner.DotNet
             var pdbPath = Path.Combine(directoryPath, assemblyName + FileNameSuffixes.DotNet.ProgramDatabase);
 
             return File.Exists(pdbPath)
-                ? new SourceInformationProviderAdapater(new SourceInformationProvider(pdbPath, null))
+                ? new SourceInformationProviderAdapater(new SourceInformationProvider(pdbPath))
                 : null;
         }
 
