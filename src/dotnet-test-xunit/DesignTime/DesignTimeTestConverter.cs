@@ -10,6 +10,9 @@ namespace Xunit.Runner.DotNet
 {
     public static class DesignTimeTestConverter
     {
+        const string Ellipsis = "...";
+        const int MaximumDisplayNameLength = 447;
+
         private readonly static HashAlgorithm Hash = SHA1.Create();
 
         public static IDictionary<ITestCase, VsTestCase> Convert(IEnumerable<ITestCase> testcases)
@@ -19,7 +22,7 @@ namespace Xunit.Runner.DotNet
                 .Select(tc => new
                 {
                     testcase = tc,
-                    shortName = GetShortName(tc),
+                    shortName = Escape(tc.DisplayName),
                     fullyQualifiedName = string.Format("{0}.{1}", tc.TestMethod.TestClass.Class.Name, tc.TestMethod.Method.Name)
                 })
                 .GroupBy(tc => tc.fullyQualifiedName);
@@ -43,32 +46,20 @@ namespace Xunit.Runner.DotNet
             return results;
         }
 
-        private static string GetShortName(ITestCase tc)
+        static string Escape(string value)
         {
-            var shortName = new StringBuilder();
+            if (value == null)
+                return string.Empty;
 
-            var classFullName = tc.TestMethod.TestClass.Class.Name;
-            var dotIndex = classFullName.LastIndexOf('.');
-            if (dotIndex >= 0)
-                shortName.Append(classFullName.Substring(dotIndex + 1));
-            else
-                shortName.Append(classFullName);
+            return Truncate(value.Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t"));
+        }
 
-            shortName.Append(".");
-            shortName.Append(tc.TestMethod.Method.Name);
+        static string Truncate(string value)
+        {
+            if (value.Length <= MaximumDisplayNameLength)
+                return value;
 
-            // We need to shorten the arguments list if it's long. Let's arbitrarily pick 50 characters.
-            var argumentsIndex = tc.DisplayName.IndexOf('(');
-            if (argumentsIndex >= 0 && tc.DisplayName.Length - argumentsIndex > 50)
-            {
-                shortName.Append(tc.DisplayName.Substring(argumentsIndex, 46));
-                shortName.Append("...");
-                shortName.Append(")");
-            }
-            else if (argumentsIndex >= 0)
-                shortName.Append(tc.DisplayName.Substring(argumentsIndex));
-
-            return shortName.ToString();
+            return value.Substring(0, MaximumDisplayNameLength - Ellipsis.Length) + Ellipsis;
         }
 
         private static VsTestCase Convert(
