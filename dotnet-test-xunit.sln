@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dotnet-test-xunit", "src\dotnet-test-xunit\dotnet-test-xunit.xproj", "{002D321E-170E-4E55-BDD1-77C6353A6EB5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "test.dotnet-test-xunit", "test\test.xunit.runner.dnx\test.dotnet-test-xunit.xproj", "{838070AB-04F2-4A37-9C86-91669E633F70}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dotnet-test-xunit.Tests", "test\dotnet-test-xunit.Tests\dotnet-test-xunit.Tests.xproj", "{838070AB-04F2-4A37-9C86-91669E633F70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
