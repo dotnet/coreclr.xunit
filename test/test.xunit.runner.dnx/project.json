@@ -1,5 +1,10 @@
 ﻿{
-  "frameworks": {
+    "buildOptions": {
+      "copyToOutput": {
+        "include": [ "xunit.runner.json" ]
+    }
+    },
+    "frameworks": {
     "netcoreapp1.0": {
       "imports": [
         "dotnet",
@@ -33,11 +38,11 @@
     }
   },
   "testRunner": "xunit",
-  "dependencies": {
-    "xunit": "2.1.0",
-    "dotnet-test-xunit": {
-      "version": "99.99.99-rc2",
-      "target": "package"
+    "dependencies": {
+        "xunit": "2.1.0",
+        "dotnet-test-xunit": {
+            "version": "99.99.99-rc2",
+            "target": "package"
+        }
     }
-  }
 }
