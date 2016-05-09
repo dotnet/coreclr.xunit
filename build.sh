@@ -5,7 +5,7 @@ echo "Installing dotnet cli..."
 echo ""
 
 export CURRENT_SCRIPT_DIR="$PWD/$(dirname $0)"
-export DOTNET_INSTALL_DIR="$CURRENT_SCRIPT_DIR/.dotnet/"
+export DOTNET_INSTALL_DIR="$CURRENT_SCRIPT_DIR/.dotnet"
 export TOOLS_DIR="$CURRENT_SCRIPT_DIR/tools"
 export GET_DOTNET_SCRIPT="$TOOLS_DIR/install.sh"
 
@@ -16,10 +16,10 @@ curl -L --create-dirs https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scr
 chmod +x $GET_DOTNET_SCRIPT
 
 # Execute install script
-$GET_DOTNET_SCRIPT
+$GET_DOTNET_SCRIPT --channel "preview" --version Latest --install-dir "$DOTNET_INSTALL_DIR" --no-path
 
 origPath=$PATH
-export PATH="$DOTNET_INSTALL_DIR/:$PATH"
+export PATH="$DOTNET_INSTALL_DIR:$PATH"
 
 if [ $? -ne 0 ]; then
   echo >&2 ".NET Execution Environment installation has failed."
