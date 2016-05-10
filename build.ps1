@@ -1,7 +1,12 @@
 $solutionPath = split-path $MyInvocation.MyCommand.Definition
-$getDotNet = join-path $solutionPath "tools\install.ps1"
+$toolsPath = join-path $solutionPath "tools"
+$getDotNet = join-path $toolsPath "install.ps1"
 
-$env:DOTNET_INSTALL_DIR="$(Convert-Path "$PSScriptRoot")\.dotnet\win7-x64"
+echo "Download latest install script from CLI repo"
+mkdir -f $toolsPath > $null
+wget https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/install.ps1 -OutFile $getDotNet
+
+$env:DOTNET_INSTALL_DIR="$solutionPath\.dotnet\win7-x64"
 if (!(Test-Path $env:DOTNET_INSTALL_DIR))
 {
     mkdir $env:DOTNET_INSTALL_DIR | Out-Null
