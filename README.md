@@ -33,4 +33,4 @@ dotnet -p path/to/project test // not yet implemented
 
 ### More Information
 
-For more complete example usage, please see [Getting Started with xUnit.net and CoreCLR / ASP.NET 5](http://xunit.github.io/docs/getting-started-coreclr.html).
+For more complete example usage, please see [Getting Started with xUnit.net and DNX / ASP.NET 5](https://xunit.github.io/docs/getting-started-dnx.html).
